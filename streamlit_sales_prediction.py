@@ -24,6 +24,18 @@ if upload_file:
   df = df.dropna(subset=['Order Date', 'Profit'])
   df['Month'] = df['Order Date'].dt.to_period('M')
 
+  # Load model and encoders
+  bundle = joblib.load('new_profit_model.pkl')
+  model = bundle['model']
+  le_subcat = bundle['le_subcat']
+  le_state = bundle['le_state']
+  le_city = bundle['le_city']
+
+  # Apply same encodings as training
+  next_month_input['Sub-Category'] = le_subcat.transform(next_month_input['Sub-Category'])
+  next_month_input['State'] = le_state.transform(next_month_input['State'])
+  next_month_input['City'] = le_city.transform(next_month_input['City'])
+
   monthly_data = (
     df.groupby(['Month', 'Sub-Category', 'State', 'City'])
       .agg({'Quantity': 'sum', 'Amount': 'sum', 'Profit': 'sum'})
@@ -43,7 +55,7 @@ if upload_file:
   X_future = pd.get_dummies(next_month_input)
   X_future = X_future.reindex(columns=X.columns, fill_value=0)
 
-  model = joblib.load('profit_model.pkl')
+  
 
   future_profit = model.predict(X_future)
   next_month_input['Predicted_Profit'] = future_profit
