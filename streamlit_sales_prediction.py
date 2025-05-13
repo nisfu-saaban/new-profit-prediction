@@ -24,6 +24,14 @@ if upload_file:
   df = df.dropna(subset=['Order Date', 'Profit'])
   df['Month'] = df['Order Date'].dt.to_period('M')
 
+  monthly_data = (
+    df.groupby(['Month', 'Sub-Category', 'State', 'City'])
+      .agg({'Quantity': 'sum', 'Amount': 'sum', 'Profit': 'sum'})
+      .reset_index()
+  )
+
+  monthly_data['Month'] = monthly_data['Month'].astype(str)
+
   next_month_input = (
     monthly_data.groupby(['Sub-Category', 'State', 'City'])
     .agg({'Quantity': 'mean', 'Amount': 'mean'})
