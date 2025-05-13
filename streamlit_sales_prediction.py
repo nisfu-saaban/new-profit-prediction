@@ -20,7 +20,6 @@ st.title('Prediction Monthly Item')
 upload_file = st.file_uploader("Upload Your CSV file", type=['csv'])
 if upload_file:
   df = pd.read_csv(upload_file)
-  df = df.drop(columns=['Unnamed: 0'])
   df['Order_Date'] = pd.to_datetime(df['Order_Date'], errors='coerce')
   df = df.dropna(subset=['Order_Date', 'Profit'])
   df['Month'] = df['Order_Date'].dt.to_period('M')
