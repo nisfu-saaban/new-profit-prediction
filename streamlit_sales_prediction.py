@@ -38,6 +38,8 @@ if upload_file:
     .reset_index()
   )
 
+  X = pd.get_dummies(monthly_data[['Sub-Category', 'State', 'City', 'Quantity', 'Amount']])
+
   X_future = pd.get_dummies(next_month_input)
   X_future = X_future.reindex(columns=X.columns, fill_value=0)
 
