@@ -31,7 +31,10 @@ if upload_file:
   le_state = bundle['le_state']
   le_city = bundle['le_city']
 
-  
+  # Apply same encodings as training
+  df['Sub-Category'] = le_subcat.transform(df['Sub-Category'])
+  df['State'] = le_state.transform(df['State'])
+  df['City'] = le_city.transform(df['City'])
 
   monthly_data = (
     df.groupby(['Month', 'Sub-Category', 'State', 'City'])
@@ -46,12 +49,6 @@ if upload_file:
     .agg({'Quantity': 'mean', 'Amount': 'mean'})
     .reset_index()
   )
-
-# Apply same encodings as training
-  next_month_input['Sub-Category'] = le_subcat.transform(next_month_input['Sub-Category'])
-  next_month_input['State'] = le_state.transform(next_month_input['State'])
-  next_month_input['City'] = le_city.transform(next_month_input['City'])
-
 
   # Remove get_dummies and just use these encoded columns
   X_future = next_month_input[['Sub-Category', 'State', 'City', 'Quantity', 'Amount']]
