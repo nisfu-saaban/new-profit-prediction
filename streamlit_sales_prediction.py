@@ -43,7 +43,7 @@ if upload_file:
   X_future = pd.get_dummies(next_month_input)
   X_future = X_future.reindex(columns=X.columns, fill_value=0)
 
-  model = joblib.load('/drive/MyDrive/model/profit_model.pkl')
+  model = joblib.load('profit_model.pkl')
 
   future_profit = model.predict(X_future)
   next_month_input['Predicted_Profit'] = future_profit
