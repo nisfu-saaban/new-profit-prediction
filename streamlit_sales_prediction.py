@@ -31,10 +31,7 @@ if upload_file:
   le_state = bundle['le_state']
   le_city = bundle['le_city']
 
-  # Apply same encodings as training
-  next_month_input['Sub-Category'] = le_subcat.transform(next_month_input['Sub-Category'])
-  next_month_input['State'] = le_state.transform(next_month_input['State'])
-  next_month_input['City'] = le_city.transform(next_month_input['City'])
+  
 
   monthly_data = (
     df.groupby(['Month', 'Sub-Category', 'State', 'City'])
@@ -50,9 +47,14 @@ if upload_file:
     .reset_index()
   )
 
-  X = pd.get_dummies(monthly_data[['Sub-Category', 'State', 'City', 'Quantity', 'Amount']])
+# Apply same encodings as training
+  next_month_input['Sub-Category'] = le_subcat.transform(next_month_input['Sub-Category'])
+  next_month_input['State'] = le_state.transform(next_month_input['State'])
+  next_month_input['City'] = le_city.transform(next_month_input['City'])
 
-  X_future = pd.get_dummies(next_month_input)
+
+  # Remove get_dummies and just use these encoded columns
+  X_future = next_month_input[['Sub-Category', 'State', 'City', 'Quantity', 'Amount']]
   X_future = X_future.reindex(columns=X.columns, fill_value=0)
 
   
