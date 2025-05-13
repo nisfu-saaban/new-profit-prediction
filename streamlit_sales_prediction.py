@@ -22,7 +22,7 @@ if upload_file:
   df = pd.read_csv(upload_file)
   df['Order Date'] = pd.to_datetime(df['Order Date'], errors='coerce')
   df = df.dropna(subset=['Order Date', 'Profit'])
-  df['Month'] = df['Order_ ate'].dt.to_period('M')
+  df['Month'] = df['Order Date'].dt.to_period('M')
 
   next_month_input = (
     monthly_data.groupby(['Sub-Category', 'State', 'City'])
